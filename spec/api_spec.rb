@@ -25,5 +25,11 @@ describe "Api" do
       expect(JSON.parse(last_response.body)["message"]).to eq("pong")
     end
 
+    it "should update a satellite when posting a JSON file" do
+      put "/api/satellite"
+      expect(last_response.status).to eql 200
+      expect(JSON.parse(last_response.body)["message"]).to eq("Satellite updated")
+    end
+
   end
 end
