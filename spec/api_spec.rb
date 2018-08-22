@@ -25,8 +25,22 @@ describe "Api" do
       expect(JSON.parse(last_response.body)["message"]).to eq("pong")
     end
 
-    it "should update a satellite when posting a JSON file" do
+    it "should fail to update satellite with no file provided" do
       put "/api/satellite"
+      expect(last_response.status).to eql 400
+      expect(JSON.parse(last_response.body)["message"]).to eql("Bad request")
+    end
+
+    it "should fail to update a satellite if file is not text/json" do
+      satellite_data_file_bad = File.join(Dir.pwd, "spec", "sattelite.txt")
+      put "/api/satellite", "file" => Rack::Test::UploadedFile.new(satellite_data_file_bad, "text/plain")
+      expect(last_response.status).to eql 400
+      expect(JSON.parse(last_response.body)["message"]).to eq("Bad data")
+    end
+
+    it "should update a satellite when posting a JSON file" do
+      satellite_data_file = File.join(Dir.pwd, "spec", "sattelite.json")
+      put "/api/satellite", "file" => Rack::Test::UploadedFile.new(satellite_data_file, "text/json")
       expect(last_response.status).to eql 200
       expect(JSON.parse(last_response.body)["message"]).to eq("Satellite updated")
     end
