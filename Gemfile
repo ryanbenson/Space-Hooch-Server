@@ -9,3 +9,4 @@ gem "sinatra"
 gem "rspec", "~> 3.0", :group => :test
 gem "simplecov", :group => :test
 gem "rack-test", :group => :test
+gem 'codecov', :group => :test
