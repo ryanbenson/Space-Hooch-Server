@@ -13,6 +13,39 @@ describe "Api" do
     Sinatra::Application
   end
 
+  before(:all) do
+    client = Mongo::Client.new(ENV['MONGODB_URI']);
+    db = client.database
+    collection = client[:sattelites]
+    collection.delete_many({})
+  end
+
+  context "when managing data" do
+    it "should be able to create a sattelite" do
+      satellite_data_file = File.join(Dir.pwd, "spec", "sattelite.json")
+      file = File.read(satellite_data_file)
+      data = JSON.parse(file)
+
+      inserted = insert_sattelite(data)
+      expect(inserted.n).to eql 1
+    end
+
+    it "should be able to find a document" do
+      data = get_sattelite(1)
+      expect(data["satellite_id"]).to eql 1
+    end
+
+    it "should update a record" do
+      satellite_data_file = File.join(Dir.pwd, "spec", "sattelite_update.json")
+      file = File.read(satellite_data_file)
+      data = JSON.parse(file)
+
+      updated = update_sattelite(data["satellite_id"], data)
+      p updated
+      expect(updated.modified_count).to eql 1
+    end
+  end
+
   context "when accessing the Api server" do
     it "should not have a home page" do
       get "/"
@@ -46,5 +79,15 @@ describe "Api" do
       expect(JSON.parse(last_response.body)["message"]).to eq("Satellite updated")
     end
 
+  end
+
+  context "when needing to merge data" do
+    it "should merge two deep hashes together" do
+      original = {:x => [1,2,3], :y => 2, :z => "hello"}
+      updated =   {:x => [4,5,6], :y => [7,8,9], :a => ["1", [true]]}
+      merged_hash = merge_data(original, updated)
+      expected = {:a=>["1", [true]], :x => [4,5,6], :y => [7,8,9], :z => "hello"}
+      expect(merged_hash).to eql expected
+    end
   end
 end

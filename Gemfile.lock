@@ -7,6 +7,7 @@ GEM
       json
       simplecov
       url
+    deep_merge (1.2.1)
     diff-lcs (1.3)
     docile (1.3.1)
     dotenv (2.5.0)
@@ -51,6 +52,7 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   codecov
+  deep_merge
   dotenv
   json
   mongo
