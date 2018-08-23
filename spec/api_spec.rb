@@ -6,6 +6,10 @@ require "rspec"
 require "rack/test"
 require "json"
 
+client = Mongo::Client.new(ENV['MONGODB_URI']);
+db = client.database
+collection = client[:sattelites]
+
 describe "Api" do
   include Rack::Test::Methods
 
@@ -14,9 +18,6 @@ describe "Api" do
   end
 
   before(:all) do
-    client = Mongo::Client.new(ENV['MONGODB_URI']);
-    db = client.database
-    collection = client[:sattelites]
     collection.delete_many({})
   end
 
@@ -26,12 +27,12 @@ describe "Api" do
       file = File.read(satellite_data_file)
       data = JSON.parse(file)
 
-      inserted = insert_sattelite(data)
+      inserted = insert_sattelite(collection, data)
       expect(inserted.n).to eql 1
     end
 
     it "should be able to find a document" do
-      data = get_sattelite(1)
+      data = get_sattelite(collection, 1)
       expect(data["satellite_id"]).to eql 1
     end
 
@@ -40,7 +41,7 @@ describe "Api" do
       file = File.read(satellite_data_file)
       data = JSON.parse(file)
 
-      updated = update_sattelite(data["satellite_id"], data)
+      updated = update_sattelite(collection, data["satellite_id"], data)
       p updated
       expect(updated.modified_count).to eql 1
     end

@@ -6,7 +6,7 @@ require "deep_merge"
 
 client = Mongo::Client.new(ENV['MONGODB_URI']);
 db = client.database
-@@collection = client[:sattelites]
+collection = client[:sattelites]
 
 get "/api/ping" do
   return {message: "pong"}.to_json
@@ -24,16 +24,16 @@ get "*" do
   return {message: "Not found"}.to_json
 end
 
-def get_sattelite(id)
-  return @@collection.find( { satellite_id: id } ).first
+def get_sattelite(coll, id)
+  return coll.find( { satellite_id: id } ).first
 end
 
-def insert_sattelite(data)
-  return @@collection.insert_one(data)
+def insert_sattelite(coll, data)
+  return coll.insert_one(data)
 end
 
-def update_sattelite(id, data)
-  return @@collection.update_one( { satellite_id: id }, data )
+def update_sattelite(coll, id, data)
+  return coll.update_one( { satellite_id: id }, data )
 end
 
 def merge_data(doc, data)
