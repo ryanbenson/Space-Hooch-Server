@@ -1,4 +1,5 @@
-ENV['RACK_ENV'] = "test"
+require "dotenv"
+Dotenv.load('.test.env')
 
 require_relative "../api"
 require "rspec"

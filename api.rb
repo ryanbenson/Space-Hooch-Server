@@ -1,5 +1,10 @@
 require "sinatra"
 require "json"
+require "mongo"
+require "dotenv/load"
+
+# client = Mongo::Client.new(ENV['MONGODB_URI']);
+# db = client.database
 
 get "/api/ping" do
   return {message: "pong"}.to_json
