@@ -15,7 +15,7 @@ _GET_ `/api/ping`
 
 Will return a `pong` in JSON
 
-_PUT_ `/api/satellite`
+_PUT_ `/api/satellites`
 
 Is what updates the data. Requirements:
 * `file` field that is a JSON type file

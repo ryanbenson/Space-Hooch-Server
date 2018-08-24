@@ -36,14 +36,29 @@ describe "Api" do
       expect(data["satellite_id"]).to eql 1
     end
 
+    it "should return nil on finding a missing doc" do
+      data = get_sattelite(collection, 23132818)
+      expect(data).to eql nil
+    end
+
     it "should update a record" do
       satellite_data_file = File.join(Dir.pwd, "spec", "sattelite_update.json")
       file = File.read(satellite_data_file)
       data = JSON.parse(file)
 
       updated = update_sattelite(collection, data["satellite_id"], data)
-      p updated
       expect(updated.modified_count).to eql 1
+    end
+
+    it "should get all records" do
+      # add another for good measure
+      satellite_data_file = File.join(Dir.pwd, "spec", "sattelite.json")
+      file = File.read(satellite_data_file)
+      data = JSON.parse(file)
+      inserted = insert_sattelite(collection, data)
+
+      all = get_all(collection)
+      expect(all.size). to eql 2
     end
   end
 
@@ -61,23 +76,29 @@ describe "Api" do
     end
 
     it "should fail to update satellite with no file provided" do
-      put "/api/satellite"
+      put "/api/satellites"
       expect(last_response.status).to eql 400
       expect(JSON.parse(last_response.body)["message"]).to eql("Bad request")
     end
 
     it "should fail to update a satellite if file is not text/json" do
       satellite_data_file_bad = File.join(Dir.pwd, "spec", "sattelite.txt")
-      put "/api/satellite", "file" => Rack::Test::UploadedFile.new(satellite_data_file_bad, "text/plain")
+      put "/api/satellites", "file" => Rack::Test::UploadedFile.new(satellite_data_file_bad, "text/plain")
       expect(last_response.status).to eql 400
       expect(JSON.parse(last_response.body)["message"]).to eq("Bad data")
     end
 
     it "should update a satellite when posting a JSON file" do
       satellite_data_file = File.join(Dir.pwd, "spec", "sattelite.json")
-      put "/api/satellite", "file" => Rack::Test::UploadedFile.new(satellite_data_file, "text/json")
+      put "/api/satellites", "file" => Rack::Test::UploadedFile.new(satellite_data_file, "text/json")
       expect(last_response.status).to eql 200
       expect(JSON.parse(last_response.body)["message"]).to eq("Satellite updated")
+    end
+
+    it "should return all satellites" do
+      get "/api/satellites"
+      expect(last_response.status).to eql 200
+      expect(JSON.parse(last_response.body).size).to eq 2
     end
 
   end

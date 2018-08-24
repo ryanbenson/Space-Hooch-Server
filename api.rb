@@ -12,7 +12,11 @@ get "/api/ping" do
   return {message: "pong"}.to_json
 end
 
-put "/api/satellite" do
+get "/api/satellites" do
+  return get_all(collection).to_json
+end
+
+put "/api/satellites" do
   halt 400, {message: 'Bad request' }.to_json if !params || !params[:file] || !params[:file][:tempfile]
   halt 400, {message: 'Bad data'}.to_json if params[:file][:type] != "text/json"
   json_data = JSON.parse(params[:file][:tempfile].read)
@@ -22,6 +26,14 @@ end
 get "*" do
   status 404
   return {message: "Not found"}.to_json
+end
+
+def get_all(coll)
+  list = []
+  coll.find.each do |doc|
+    list << doc
+  end
+  return list
 end
 
 def get_sattelite(coll, id)
