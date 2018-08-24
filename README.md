@@ -15,11 +15,20 @@ _GET_ `/api/ping`
 
 Will return a `pong` in JSON
 
+_GET_ `api/satellites`
+
+Will return all satellites
+
 _PUT_ `/api/satellites`
 
 Is what updates the data. Requirements:
 * `file` field that is a JSON type file
 It will return a 400 if there is no file, or if the file isn't JSON. It will process and return a 200 if successful
+
+If there is no satellite with the `satellite_id`, it will be created
+
+If an existing satellite_id has already been created, it will merge the data, and
+update the data
 
 ## Sample JSON format
 Here is a sample JSON data that should be provided through a file in the above API call to update the data
