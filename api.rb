@@ -8,6 +8,10 @@ client = Mongo::Client.new(ENV['MONGODB_URI']);
 db = client.database
 collection = client[:sattelites]
 
+before do
+  content_type 'application/json'
+end
+
 get "/api/ping" do
   return {message: "pong"}.to_json
 end
