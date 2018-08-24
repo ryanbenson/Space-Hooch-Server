@@ -88,17 +88,17 @@ describe "Api" do
       expect(JSON.parse(last_response.body)["message"]).to eq("Bad data")
     end
 
-    it "should update a satellite when posting a JSON file" do
-      satellite_data_file = File.join(Dir.pwd, "spec", "sattelite.json")
+    it "should create a satellite when posting a JSON file for a satellite that doesn't exist yet" do
+      satellite_data_file = File.join(Dir.pwd, "spec", "satellite_new.json")
       put "/api/satellites", "file" => Rack::Test::UploadedFile.new(satellite_data_file, "text/json")
       expect(last_response.status).to eql 200
-      expect(JSON.parse(last_response.body)["message"]).to eq("Satellite updated")
+      expect(JSON.parse(last_response.body)["message"]).to eq("Satellite added")
     end
 
     it "should return all satellites" do
       get "/api/satellites"
       expect(last_response.status).to eql 200
-      expect(JSON.parse(last_response.body).size).to eq 2
+      expect(JSON.parse(last_response.body).size).to eq 3
     end
 
   end

@@ -18,9 +18,19 @@ end
 
 put "/api/satellites" do
   halt 400, {message: 'Bad request' }.to_json if !params || !params[:file] || !params[:file][:tempfile]
-  halt 400, {message: 'Bad data'}.to_json if params[:file][:type] != "text/json"
+  halt 400, {message: 'Bad data'}.to_json if !['text/json', 'application/json'].include? params[:file][:type]
   json_data = JSON.parse(params[:file][:tempfile].read)
-  return {message: "Satellite updated"}.to_json
+  satellite_id = json_data["satellite_id"]
+  satellite = get_sattelite(collection, satellite_id)
+
+  if satellite.nil?
+    insert_sattelite(collection, json_data)
+    return {message: "Satellite added"}.to_json
+  else
+    merged_data = merge_data(satellite, json_data)
+    update_sattelite(collection, satellite_id, merged_data)
+    return {message: "Satellite updated"}.to_json
+  end
 end
 
 get "*" do
