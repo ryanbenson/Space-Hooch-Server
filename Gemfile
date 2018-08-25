@@ -6,6 +6,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem "json"
 gem "sinatra"
+gem "sinatra-cross_origin"
 gem "mongo"
 gem "bson_ext"
 gem "dotenv"
