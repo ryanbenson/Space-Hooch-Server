@@ -5,8 +5,10 @@ require "mongo"
 require "dotenv/load"
 require "deep_merge"
 
-set :protection, :except => [:http_origin]
-use Rack::Protection::HttpOrigin, :origin_whitelist => ['https://space-hooch-qqvqammfib.now.sh/', '*']
+set :allow_origin, :any
+set :allow_methods, [:get, :put, :post, :options]
+set :allow_credentials, true
+set :expose_headers, ['Content-Type']
 
 client = Mongo::Client.new(ENV['MONGODB_URI']);
 db = client.database
