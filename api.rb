@@ -5,6 +5,9 @@ require "mongo"
 require "dotenv/load"
 require "deep_merge"
 
+set :protection, :except => [:http_origin]
+use Rack::Protection::HttpOrigin, :origin_whitelist => ['https://space-hooch-qqvqammfib.now.sh/', '*']
+
 client = Mongo::Client.new(ENV['MONGODB_URI']);
 db = client.database
 collection = client[:sattelites]
@@ -49,8 +52,8 @@ get "*" do
 end
 
 options "*" do
-  response.headers["Allow"] = "GET, POST, PUT, OPTIONS"
-  response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
+  response.headers["Allow"] = "HEAD,GET,PUT,DELETE,OPTIONS"
+  response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept"
   response.headers["Access-Control-Allow-Origin"] = "*"
   200
 end
