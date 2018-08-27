@@ -16,6 +16,7 @@ GEM
       bson (>= 4.3.0, < 5.0.0)
     mustermann (1.0.3)
     rack (2.0.5)
+    rack-cors (1.0.2)
     rack-protection (2.0.3)
       rack
     rack-test (1.1.0)
@@ -57,6 +58,7 @@ DEPENDENCIES
   dotenv
   json
   mongo
+  rack-cors
   rack-test
   rspec (~> 3.0)
   simplecov

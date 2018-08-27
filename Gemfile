@@ -11,6 +11,7 @@ gem "mongo"
 gem "bson_ext"
 gem "dotenv"
 gem "deep_merge"
+gem "rack-cors", require: "rack/cors"
 gem "rspec", "~> 3.0", :group => :test
 gem "simplecov", :group => :test
 gem "rack-test", :group => :test
